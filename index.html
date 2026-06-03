@@ -1054,8 +1054,22 @@ function monthRange(m){
 }
 
 function initFilters(){
-  // 월 드롭다운: 데이터 월 + 미래 월(예정) 포함
-  const monthOpts = D.cal_months.map(m=>{
+  // 월 드롭다운: 데이터 월 + 미래 월(예정) 포함. 현재 달(D.today)은 데이터가 없어도 항상 노출.
+  const curYM = (D.today||'').slice(0,7);
+  const allYM = D.cal_months.concat(D.months);
+  if(curYM) allYM.push(curYM);
+  allYM.sort();
+  // 첫 달 ~ 마지막 달(현재 달 포함)을 연속 범위로 채워 중간/현재 달 누락 방지
+  const monthList = [];
+  if(allYM.length){
+    let [cy,cm] = allYM[0].split('-').map(Number);
+    const [ey,em] = allYM[allYM.length-1].split('-').map(Number);
+    while(cy<ey || (cy===ey && cm<=em)){
+      monthList.push(`${cy}-${pad2(cm)}`);
+      if(++cm>12){ cm=1; cy++; }
+    }
+  }
+  const monthOpts = monthList.map(m=>{
     const isFuture = !D.months.includes(m);
     const monthNum = m.slice(5).replace(/^0/,'');
     const monthLbl = curLang==='ko' ? `${monthNum}월` : `Bulan ${monthNum}`;
