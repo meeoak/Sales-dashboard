@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>내가 겪은 나르시스트 EP01 — 러브바밍 (애니매틱 테스트)</title>
+<style>
+  :root{ --w: min(92vw, 50.6vh); }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#0a0a0c; color:#fff; font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+        min-height:100vh; display:flex; flex-direction:column; align-items:center; gap:14px; padding:18px; }
+  h1{ font-size:14px; font-weight:600; color:#9aa; letter-spacing:.5px; }
+  .frame{ position:relative; width:var(--w); aspect-ratio:9/16; border-radius:18px; overflow:hidden;
+          background:#222; box-shadow:0 20px 60px rgba(0,0,0,.6); transition:background 2.2s ease; }
+  .label{ position:absolute; top:14px; left:14px; font-size:12px; padding:5px 9px; border-radius:6px;
+          background:rgba(0,0,0,.45); color:#fff; opacity:0; transition:opacity .5s; backdrop-filter:blur(2px); }
+  .badge{ position:absolute; top:14px; right:14px; font-size:11px; font-weight:700; padding:4px 8px;
+          border-radius:6px; background:rgba(255,255,255,.16); color:#fff; }
+  .scene{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:8% 10%;
+          text-align:center; }
+  .sceneTxt{ font-size:15px; color:rgba(255,255,255,.5); line-height:1.6; font-weight:500; }
+  .caption{ position:absolute; left:6%; right:6%; bottom:16%; text-align:center; font-size:clamp(18px,4.6vw,30px);
+            font-weight:800; line-height:1.45; text-shadow:0 2px 10px rgba(0,0,0,.85); min-height:2.6em; }
+  .help{ position:absolute; left:6%; right:6%; bottom:8%; text-align:center; font-size:13px; color:#ffd9a8;
+         opacity:0; transition:opacity .6s; }
+  .bar{ position:absolute; left:0; bottom:0; height:4px; background:#ff5a7a; width:0%; }
+  .tc{ position:absolute; bottom:10px; right:12px; font-size:11px; color:rgba(255,255,255,.55); }
+  .ctrl{ display:flex; gap:10px; }
+  button{ background:#ff5a7a; color:#fff; border:0; padding:9px 18px; border-radius:8px; font-size:14px;
+          font-weight:700; cursor:pointer; }
+  button.sec{ background:#2a2a30; }
+  .note{ font-size:12px; color:#778; max-width:var(--w); text-align:center; line-height:1.5; }
+</style>
+</head>
+<body>
+  <h1>EP01 · 러브바밍 — 타이밍 애니매틱 (≈58초, 9:16) · 음성/이미지 없이 페이싱 테스트용</h1>
+  <div class="frame" id="frame">
+    <div class="label" id="label">사례 재구성 · 특정 인물과 무관</div>
+    <div class="badge">AI</div>
+    <div class="scene"><div class="sceneTxt" id="sceneTxt"></div></div>
+    <div class="caption" id="caption"></div>
+    <div class="help" id="help">도움이 필요하면 · 여성긴급전화 1366 · 자살예방 109</div>
+    <div class="bar" id="bar"></div>
+    <div class="tc" id="tc">0.0s</div>
+  </div>
+  <div class="ctrl">
+    <button id="play">▶ 재생</button>
+    <button class="sec" id="replay">↺ 다시</button>
+  </div>
+  <div class="note">이 환경에서는 실제 MP4·음성을 만들 수 없어, 자막 타이밍·색감 전환·페이싱을 미리 보는 애니매틱입니다.
+  실제 제작은 EP01-test-kit.md의 순서대로(이 .srt + TTS 음성 + 이미지) 진행하세요.</div>
+
+<script>
+const captions = [
+  [0,3.2,"처음 한 달은… 완벽했습니다."],
+  [3.2,6,"그 사람은, 그게 사랑이라고 믿게 만들었죠."],
+  [6,10.5,"매일 아침과 밤, 연락이 끊이지 않았습니다."],
+  [10.5,14.5,"잦은 선물. 그리고 며칠 만에 — “넌 내 운명이야.”"],
+  [14.5,18,"모든 것이 빠르고, 강렬했습니다."],
+  [18,22.5,"그런데… 어느 순간부터,"],
+  [22.5,27.5,"‘완벽하다’던 바로 그 모습들을 — 문제 삼기 시작했습니다."],
+  [27.5,32.5,"칭찬이 비난으로 바뀌는 데에는… 오래 걸리지 않았습니다."],
+  [32.5,37.5,"이건 빠른 사랑이 아니었습니다. ‘러브바밍’이라는 패턴이었죠."],
+  [37.5,43,"과한 애정으로 의존하게 만든 뒤, 주도권을 가져가는 방식."],
+  [43,48,"사랑은 속도가 아니라 — 일관성으로 증명됩니다."],
+  [48,53.5,"혹시 지금, 비슷한 신호를 느끼고 있다면 —"],
+  [53.5,58.5,"그건 당신의 잘못이 아닙니다."]
+];
+const scenes = [
+  [0,6,  "#3a2a1a","#c98a3c","S1 · 따뜻한 시작\n카페·은은한 빛, 쏟아지는 메시지 알림"],
+  [6,18, "#422a16","#d99a4a","S2 · 러브바밍\n꽃다발·선물·애정 폭주(과잉)"],
+  [18,33,"#2a2f3a","#6a7a8c","S3 · 전환\n시든 꽃, 차가워지는 톤, 빗물 창"],
+  [33,48,"#11161f","#2f4a63","S4 · 깨달음\n혼자 창가 실루엣 · ‘러브바밍’"],
+  [48,58.5,"#1a1410","#cf9350","S5 · 마무리\n어둠 속 되살아나는 작은 빛"]
+];
+const TOTAL=58.5;
+const frame=document.getElementById('frame'), cap=document.getElementById('caption'),
+  sceneTxt=document.getElementById('sceneTxt'), bar=document.getElementById('bar'),
+  tc=document.getElementById('tc'), label=document.getElementById('label'), help=document.getElementById('help');
+let t0=null, raf=null, playing=false;
+
+function pick(arr,t){ for(const c of arr){ if(t>=c[0]&&t<c[1]) return c; } return null; }
+function render(t){
+  const c=pick(captions,t); cap.textContent=c?c[2]:"";
+  const s=pick(scenes,t);
+  if(s){ frame.style.background=`linear-gradient(160deg, ${s[2]} 0%, ${s[3]} 100%)`;
+         sceneTxt.textContent=s[4]; }
+  label.style.opacity = (t<8)?1:0;
+  help.style.opacity = (t>=48)?1:0;
+  bar.style.width=(Math.min(t,TOTAL)/TOTAL*100)+"%";
+  tc.textContent=t.toFixed(1)+"s";
+}
+function loop(ts){
+  if(t0===null) t0=ts;
+  const t=(ts-t0)/1000;
+  render(t);
+  if(t<TOTAL){ raf=requestAnimationFrame(loop); }
+  else { playing=false; document.getElementById('play').textContent="▶ 재생"; }
+}
+function play(){ if(playing) return; playing=true; t0=null; document.getElementById('play').textContent="❚❚ 재생중";
+  raf=requestAnimationFrame(loop); }
+function replay(){ cancelAnimationFrame(raf); playing=false; t0=null; render(0);
+  document.getElementById('play').textContent="▶ 재생"; play(); }
+document.getElementById('play').onclick=play;
+document.getElementById('replay').onclick=replay;
+render(0);
+setTimeout(play,400);
+</script>
+</body>
+</html>
