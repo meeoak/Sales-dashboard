@@ -1,0 +1,19 @@
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="ko-KR">
+  <voice name="ko-KR-InJoonNeural">
+    <prosody rate="-8%" pitch="-2st">
+      처음 한 달은<break time="400ms"/> 완벽했습니다.<break time="550ms"/>
+      그 사람은, 그게 사랑이라고 믿게 만들었죠.<break time="750ms"/>
+      매일 아침과 밤, 연락이 끊이지 않았습니다.<break time="350ms"/>
+      잦은 선물.<break time="300ms"/> 그리고 며칠 만에<break time="250ms"/> "넌 내 운명이야."<break time="500ms"/>
+      모든 것이 빠르고, 강렬했습니다.<break time="750ms"/>
+      그런데<break time="450ms"/> 어느 순간부터,<break time="300ms"/>
+      '완벽하다'던 바로 그 모습들을<break time="300ms"/> 그 사람은 문제 삼기 시작했습니다.<break time="600ms"/>
+      칭찬이 비난으로 바뀌는 데에는<break time="400ms"/> 오래 걸리지 않았습니다.<break time="800ms"/>
+      이건 빠른 사랑이 아니었습니다.<break time="350ms"/> '러브바밍'이라 불리는 패턴이었죠.<break time="500ms"/>
+      과한 애정으로 빠르게 의존하게 만든 뒤,<break time="300ms"/> 주도권을 가져가는 방식.<break time="600ms"/>
+      사랑은 속도가 아니라<break time="300ms"/> 일관성으로 증명됩니다.<break time="800ms"/>
+      혹시 지금,<break time="350ms"/> 비슷한 신호를 느끼고 있다면<break time="350ms"/>
+      그건 당신의 잘못이 아닙니다.
+    </prosody>
+  </voice>
+</speak>
