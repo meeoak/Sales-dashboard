@@ -8,7 +8,8 @@
 """
 import os, subprocess
 from PIL import Image
-from epkit import CAPTIONS, SCENES, BUILD, HERE, W, H, render_slide, concat_to_video, ffmpeg_bin
+from epkit import CAPTIONS, SCENES, BUILD, HERE, W, H, render_slide, kenburns_concat, ffmpeg_bin
+import cine
 
 ASSETS = os.path.join(HERE, "assets")
 
@@ -26,7 +27,7 @@ for i in range(5):
     p = os.path.join(ASSETS, f"s{i+1}.png")
     if not os.path.exists(p):
         raise SystemExit(f"이미지가 없습니다: {p}  (Canva에서 S{i+1} 컷을 PNG로 받아 여기에 두세요)")
-    scene_imgs.append(load_cover(p))
+    scene_imgs.append(cine.treat(load_cover(p)))
 
 os.makedirs(BUILD, exist_ok=True)
 slide_paths = []
@@ -36,7 +37,7 @@ for i, (_, sc, _, _) in enumerate(CAPTIONS):
     img.save(sp); slide_paths.append(sp)
 
 silent = os.path.join(BUILD, "silent.mp4")
-concat_to_video(slide_paths, silent)
+kenburns_concat(slide_paths, silent)
 
 vo = os.path.join(HERE, "EP01-vo.mp3")
 if not os.path.exists(vo):

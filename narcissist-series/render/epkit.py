@@ -143,3 +143,26 @@ def concat_to_video(slide_paths, out_path, fps=30):
            "-movflags", "+faststart", out_path]
     subprocess.run(cmd, check=True, capture_output=True)
     return out_path
+
+def kenburns_concat(slide_paths, out_path, fps=30):
+    """각 슬라이드를 느린 줌(켄번스) 클립으로 만든 뒤 이어붙인다. 무음 비디오."""
+    os.makedirs(BUILD, exist_ok=True)
+    clips = []
+    for p, (_, _, s, e) in zip(slide_paths, CAPTIONS):
+        dur = max(0.2, round(e - s, 3)); frames = max(1, int(dur * fps))
+        c = p + ".clip.mp4"
+        vf = (f"scale={W*2}:{H*2},zoompan=z='min(zoom+0.0008,1.10)':"
+              f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:s={W}x{H}:fps={fps},"
+              f"format=yuv420p")
+        subprocess.run([ffmpeg_bin(), "-y", "-loop", "1", "-i", p, "-t", str(dur),
+                        "-vf", vf, "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", c],
+                       check=True, capture_output=True)
+        clips.append(c)
+    listf = os.path.join(BUILD, "clips.txt")
+    with open(listf, "w", encoding="utf-8") as f:
+        for c in clips:
+            f.write(f"file '{c}'\n")
+    subprocess.run([ffmpeg_bin(), "-y", "-f", "concat", "-safe", "0", "-i", listf,
+                    "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p",
+                    "-movflags", "+faststart", out_path], check=True, capture_output=True)
+    return out_path
