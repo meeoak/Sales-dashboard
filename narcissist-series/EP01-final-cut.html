@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>내가 겪은 나르시스트 EP01 — 러브바밍 (재생용 파이널컷)</title>
+<style>
+  :root{ --w: min(94vw, 50.6vh); }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#08080a; color:#fff; min-height:100vh; display:flex; flex-direction:column;
+        align-items:center; gap:12px; padding:16px;
+        font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; }
+  h1{ font-size:13px; font-weight:600; color:#99a; text-align:center; line-height:1.5; }
+  .frame{ position:relative; width:var(--w); aspect-ratio:9/16; border-radius:20px; overflow:hidden;
+          background:#222; box-shadow:0 22px 64px rgba(0,0,0,.65); transition:background 2s ease; }
+  .emoji{ position:absolute; top:30%; left:0; right:0; text-align:center; font-size:clamp(54px,15vw,96px);
+          filter:drop-shadow(0 6px 18px rgba(0,0,0,.5)); transition:opacity .6s; }
+  .sceneLabel{ position:absolute; top:46%; left:0; right:0; text-align:center; font-size:13px;
+               color:rgba(255,255,255,.6); letter-spacing:.5px; }
+  .label{ position:absolute; top:14px; left:14px; font-size:11.5px; padding:5px 9px; border-radius:6px;
+          background:rgba(0,0,0,.5); opacity:0; transition:opacity .5s; }
+  .badge{ position:absolute; top:14px; right:14px; font-size:11px; font-weight:800; padding:4px 8px;
+          border-radius:6px; background:rgba(255,255,255,.18); }
+  .cue{ position:absolute; top:54px; right:14px; font-size:11px; padding:4px 8px; border-radius:6px;
+        background:rgba(255,90,122,.25); opacity:0; transition:opacity .5s; }
+  .caption{ position:absolute; left:6%; right:6%; bottom:15%; text-align:center;
+            font-size:clamp(19px,4.8vw,31px); font-weight:800; line-height:1.45;
+            text-shadow:0 2px 12px rgba(0,0,0,.9); min-height:2.8em; }
+  .help{ position:absolute; left:6%; right:6%; bottom:7%; text-align:center; font-size:12.5px;
+         color:#ffd9a8; opacity:0; transition:opacity .6s; }
+  .bar{ position:absolute; left:0; bottom:0; height:4px; background:#ff5a7a; width:0%; transition:width .3s; }
+  .ctrl{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  button{ background:#ff5a7a; color:#fff; border:0; padding:10px 18px; border-radius:9px; font-size:14px;
+          font-weight:700; cursor:pointer; }
+  button.sec{ background:#26262c; }
+  .note{ font-size:11.5px; color:#778; max-width:var(--w); text-align:center; line-height:1.55; }
+</style>
+</head>
+<body>
+  <h1>EP01 · 러브바밍 — 재생용 파이널컷 (9:16)<br>브라우저 음성으로 한국어 낭독 + 자막 + 장면 (기기에 따라 음성 차이)</h1>
+  <div class="frame" id="frame">
+    <div class="label" id="lab">사례 재구성 · 특정 인물과 무관</div>
+    <div class="badge">AI</div>
+    <div class="cue" id="cue">♪ 전환</div>
+    <div class="emoji" id="emoji"></div>
+    <div class="sceneLabel" id="slab"></div>
+    <div class="caption" id="cap"></div>
+    <div class="help" id="help">도움이 필요하면 · 여성긴급전화 1366 · 자살예방 109</div>
+    <div class="bar" id="bar"></div>
+  </div>
+  <div class="ctrl">
+    <button id="play">▶ 재생 (소리 켜기)</button>
+    <button class="sec" id="mute">🔇 자막만</button>
+    <button class="sec" id="replay">↺ 다시</button>
+  </div>
+  <div class="note">실제 업로드용 MP4로 만들려면: 이 화면을 화면녹화(약 1분)하거나, EP01-test-kit.md대로
+  CLOVA/ElevenLabs로 'Brian 톤' 음성을 입혀 CapCut에서 합치세요. AI 라벨·재구성 고지 유지.</div>
+
+<script>
+const S = [
+  {g:["#3a2a1a","#c98a3c"], e:"☕💬", t:"S1 · 따뜻한 시작"},
+  {g:["#422a16","#d99a4a"], e:"💐🎁📱", t:"S2 · 러브바밍 (과잉 애정)"},
+  {g:["#2a2f3a","#6a7a8c"], e:"🥀🌧️", t:"S3 · 전환 (칭찬→비난)"},
+  {g:["#11161f","#2f4a63"], e:"🪟", t:"S4 · 깨달음 · ‘러브바밍’"},
+  {g:["#1a1410","#cf9350"], e:"🌅", t:"S5 · 당신 잘못이 아닙니다"}
+];
+const L = [
+  {s:0, t:"처음 한 달은… 완벽했습니다."},
+  {s:0, t:"그 사람은, 그게 사랑이라고 믿게 만들었죠."},
+  {s:1, t:"매일 아침과 밤, 연락이 끊이지 않았습니다."},
+  {s:1, t:"잦은 선물. 그리고 며칠 만에 — “넌 내 운명이야.”"},
+  {s:1, t:"모든 것이 빠르고, 강렬했습니다."},
+  {s:2, t:"그런데… 어느 순간부터,"},
+  {s:2, t:"‘완벽하다’던 바로 그 모습들을 — 문제 삼기 시작했습니다."},
+  {s:2, t:"칭찬이 비난으로 바뀌는 데에는… 오래 걸리지 않았습니다."},
+  {s:3, t:"이건 빠른 사랑이 아니었습니다. ‘러브바밍’이라는 패턴이었죠."},
+  {s:3, t:"과한 애정으로 의존하게 만든 뒤, 주도권을 가져가는 방식."},
+  {s:3, t:"사랑은 속도가 아니라 — 일관성으로 증명됩니다."},
+  {s:4, t:"혹시 지금, 비슷한 신호를 느끼고 있다면 —"},
+  {s:4, t:"그건 당신의 잘못이 아닙니다."}
+];
+const frame=document.getElementById('frame'),emoji=document.getElementById('emoji'),
+  slab=document.getElementById('slab'),cap=document.getElementById('cap'),lab=document.getElementById('lab'),
+  help=document.getElementById('help'),bar=document.getElementById('bar'),cue=document.getElementById('cue');
+let i=0, running=false, muted=false, voice=null;
+
+function pickVoice(){
+  const vs = speechSynthesis.getVoices();
+  voice = vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith('ko')) || vs.find(v=>/ko/i.test(v.name)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+
+function show(idx){
+  const line=L[idx], sc=S[line.s];
+  frame.style.background=`linear-gradient(160deg, ${sc.g[0]} 0%, ${sc.g[1]} 100%)`;
+  emoji.textContent=sc.e; slab.textContent=sc.t; cap.textContent=line.t;
+  lab.style.opacity = (idx<2)?1:0;
+  help.style.opacity = (line.s===4)?1:0;
+  cue.style.opacity = (idx===5||idx===11)?1:0;
+  cue.textContent = (line.s>=4)?"♪ 해소":"♪ 전환";
+  bar.style.width = ((idx+1)/L.length*100)+"%";
+}
+function speak(idx,next){
+  if(muted || !('speechSynthesis' in window)){
+    const ms = 700 + L[idx].t.replace(/[^가-힣a-zA-Z]/g,'').length*95;
+    return setTimeout(next, ms);
+  }
+  const u=new SpeechSynthesisUtterance(L[idx].t.replace(/[—…“”]/g,' '));
+  u.lang='ko-KR'; if(voice)u.voice=voice; u.pitch=0.7; u.rate=0.86;
+  u.onend=next;
+  u.onerror=()=>{ const ms=700+L[idx].t.length*95; setTimeout(next,ms); };
+  speechSynthesis.speak(u);
+}
+function step(){
+  if(!running) return;
+  if(i>=L.length){ running=false; document.getElementById('play').textContent="▶ 다시 재생"; return; }
+  show(i);
+  speak(i, ()=>{ i++; setTimeout(step, 350); });
+}
+function start(){
+  if(running) return;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  if(i>=L.length) i=0;
+  running=true; document.getElementById('play').textContent="❚❚ 재생중";
+  step();
+}
+document.getElementById('play').onclick=start;
+document.getElementById('replay').onclick=()=>{ running=false; if('speechSynthesis'in window)speechSynthesis.cancel();
+  i=0; document.getElementById('play').textContent="▶ 재생 (소리 켜기)"; show(0); };
+document.getElementById('mute').onclick=(e)=>{ muted=!muted; e.target.textContent=muted?"🔊 소리 켜기":"🔇 자막만";
+  if(muted&&'speechSynthesis'in window)speechSynthesis.cancel(); };
+show(0);
+</script>
+</body>
+</html>
